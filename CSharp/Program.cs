@@ -134,6 +134,131 @@ namespace KuantumKaosYonetimi
     // Main Program
     class Program
     {
+        static double GetValidStability(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                if (double.TryParse(Console.ReadLine(), out double value))
+                {
+                    if (value >= 0 && value <= 100)
+                        return value;
+                    Console.WriteLine("Hatalı giriş! 0-100 arasında bir sayı giriniz.");
+                }
+                else
+                {
+                    Console.WriteLine("Hatalı giriş! Lütfen sayısal bir değer giriniz.");
+                }
+            }
+        }
+
+        static int GetValidMenuChoice(string prompt, int max)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                if (int.TryParse(Console.ReadLine(), out int value))
+                {
+                    if (value >= 1 && value <= max)
+                        return value;
+                    Console.WriteLine($"Hatalı giriş! 1-{max} arasında bir sayı giriniz.");
+                }
+                else
+                {
+                    Console.WriteLine("Hatalı giriş! Lütfen sayısal bir değer giriniz.");
+                }
+            }
+        }
+
+        static void YeniNesneEkle(List<KuantumNesnesi> kuantumNesneleri)
+        {
+            Console.WriteLine("\n=== YENİ NESNE EKLE ===");
+            Console.WriteLine("1. Ambar");
+            Console.WriteLine("2. Metot");
+            int tip = GetValidMenuChoice("Nesne tipi seçiniz (1-2): ", 2);
+
+            Console.Write("ID giriniz: ");
+            string nesneId = Console.ReadLine() ?? "UNKNOWN";
+            double stabilite = GetValidStability("Stabilite giriniz (0-100): ");
+
+            if (tip == 1)
+            {
+                Console.Write("Vardiya Amiri giriniz: ");
+                string amir = Console.ReadLine() ?? "Bilinmiyor";
+                Ambar nesne = new Ambar(nesneId, amir);
+                nesne.Stabilite = stabilite;
+                kuantumNesneleri.Add(nesne);
+                Console.WriteLine($"✓ Ambar {nesneId} başarıyla eklendi!");
+            }
+            else
+            {
+                Console.Write("Analiz Tipi giriniz: ");
+                string analizTipi = Console.ReadLine() ?? "Bilinmiyor";
+                Metot nesne = new Metot(nesneId, analizTipi);
+                nesne.Stabilite = stabilite;
+                kuantumNesneleri.Add(nesne);
+                Console.WriteLine($"✓ Metot {nesneId} başarıyla eklendi!");
+            }
+        }
+
+        static void NesneleriListele(List<KuantumNesnesi> kuantumNesneleri)
+        {
+            Console.WriteLine("\n=== NESNE LİSTESİ (DURUM RAPORU) ===");
+            if (kuantumNesneleri.Count == 0)
+            {
+                Console.WriteLine("Henüz hiç nesne eklenmemiş.");
+                return;
+            }
+
+            for (int i = 0; i < kuantumNesneleri.Count; i++)
+            {
+                Console.WriteLine($"\n{i + 1}. Nesne:");
+                kuantumNesneleri[i].DurumBilgisi();
+            }
+        }
+
+        static void TehlikeyiAnalizEt(List<KuantumNesnesi> kuantumNesneleri)
+        {
+            Console.WriteLine("\n=== TEHLİKE ANALİZİ ===");
+            if (kuantumNesneleri.Count == 0)
+            {
+                Console.WriteLine("Henüz hiç nesne eklenmemiş.");
+                return;
+            }
+
+            foreach (KuantumNesnesi nesne in kuantumNesneleri)
+            {
+                nesne.TehlikeSeviyesi();
+                Console.WriteLine("---");
+            }
+        }
+
+        static void AcilDurumSogutmasiYap(List<KuantumNesnesi> kuantumNesneleri)
+        {
+            Console.WriteLine("\n=== ACİL DURUM SOĞUTMASI ===");
+            if (kuantumNesneleri.Count == 0)
+            {
+                Console.WriteLine("Henüz hiç nesne eklenmemiş.");
+                return;
+            }
+
+            bool bulundu = false;
+            foreach (KuantumNesnesi nesne in kuantumNesneleri)
+            {
+                if (nesne is IKritik kritikNesne)
+                {
+                    kritikNesne.AcilDurumSogutmasi();
+                    Console.WriteLine("---");
+                    bulundu = true;
+                }
+            }
+
+            if (!bulundu)
+            {
+                Console.WriteLine("Soğutma yapılabilecek nesne bulunamadı.");
+            }
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("=== KUANTUM KAOS YÖNETİMİ SİSTEMİ ===");
@@ -142,58 +267,60 @@ namespace KuantumKaosYonetimi
             // Polymorphism - Farklı türdeki nesneleri aynı listede saklama
             List<KuantumNesnesi> kuantumNesneleri = new List<KuantumNesnesi>();
 
-            // Nesneler oluşturma
-            Ambar ambar1 = new Ambar("AMB-001", "Ahmet Yılmaz");
-            ambar1.Stabilite = 25; // Kritik seviye
-
-            Ambar ambar2 = new Ambar("AMB-002", "Ayşe Demir");
-            ambar2.Stabilite = 75; // Güvenli seviye
-
-            Metot metot1 = new Metot("MET-001", "Soğutma Analizi");
-            metot1.Stabilite = 15; // Kritik seviye
-
-            Metot metot2 = new Metot("MET-002", "Stabilite Kontrolü");
-            metot2.Stabilite = 80; // Güvenli seviye
-
-            // Listeye ekleme
-            kuantumNesneleri.Add(ambar1);
-            kuantumNesneleri.Add(ambar2);
-            kuantumNesneleri.Add(metot1);
-            kuantumNesneleri.Add(metot2);
-
-            // Polymorphism - Aynı interface üzerinden farklı davranışlar
-            foreach (KuantumNesnesi nesne in kuantumNesneleri)
+            // Ana döngü (Main Loop)
+            while (true)
             {
-                nesne.DurumBilgisi();
-                nesne.TehlikeSeviyesi();
-                
-                // Interface kontrolü ve kullanımı
-                if (nesne is IKritik kritikNesne)
+                Console.WriteLine("\n" + new string('=', 50));
+                Console.WriteLine("KUANTUM AMBARI KONTROL PANELİ");
+                Console.WriteLine(new string('=', 50));
+                Console.WriteLine("1. Yeni Nesne Ekle (Rastgele Veri/Kararlık Madde/Anti Madde üretir)");
+                Console.WriteLine("2. Nesneleri Listele (Durum Raporu)");
+                Console.WriteLine("3. Tehlikeyi Analiz Et (ID integersı)");
+                Console.WriteLine("4. Acil Durum Soğutması Yap (Sadece İKritik olanlar için)");
+                Console.WriteLine("5. Çıkış");
+
+                int secim = GetValidMenuChoice("Seçiminiz (1-5): ", 5);
+
+                if (secim == 1)
                 {
-                    kritikNesne.AcilDurumSogutmasi();
+                    YeniNesneEkle(kuantumNesneleri);
                 }
-                
-                Console.WriteLine("---");
+                else if (secim == 2)
+                {
+                    NesneleriListele(kuantumNesneleri);
+                }
+                else if (secim == 3)
+                {
+                    TehlikeyiAnalizEt(kuantumNesneleri);
+                }
+                else if (secim == 4)
+                {
+                    AcilDurumSogutmasiYap(kuantumNesneleri);
+                }
+                else if (secim == 5)
+                {
+                    Console.WriteLine("\n=== SİSTEM RAPORU ===");
+                    int kritikSayisi = 0;
+                    int guvenliSayisi = 0;
+
+                    foreach (KuantumNesnesi nesne in kuantumNesneleri)
+                    {
+                        if (nesne.Stabilite < 30)
+                            kritikSayisi++;
+                        else if (nesne.Stabilite >= 60)
+                            guvenliSayisi++;
+                    }
+
+                    Console.WriteLine($"Toplam Nesne: {kuantumNesneleri.Count}");
+                    Console.WriteLine($"Kritik Seviye: {kritikSayisi}");
+                    Console.WriteLine($"Güvenli Seviye: {guvenliSayisi}");
+                    Console.WriteLine($"Orta Risk Seviye: {kuantumNesneleri.Count - kritikSayisi - guvenliSayisi}");
+                    Console.WriteLine("\nProgram sonlandırılıyor...");
+                    break;
+                }
             }
 
-            Console.WriteLine("\n=== SİSTEM RAPORU ===");
-            int kritikSayisi = 0;
-            int guvenliSayisi = 0;
-
-            foreach (KuantumNesnesi nesne in kuantumNesneleri)
-            {
-                if (nesne.Stabilite < 30)
-                    kritikSayisi++;
-                else if (nesne.Stabilite >= 60)
-                    guvenliSayisi++;
-            }
-
-            Console.WriteLine($"Toplam Nesne: {kuantumNesneleri.Count}");
-            Console.WriteLine($"Kritik Seviye: {kritikSayisi}");
-            Console.WriteLine($"Güvenli Seviye: {guvenliSayisi}");
-            Console.WriteLine($"Orta Risk Seviye: {kuantumNesneleri.Count - kritikSayisi - guvenliSayisi}");
-
-            Console.WriteLine("\nProgram tamamlandı. Çıkmak için bir tuşa basın...");
+            Console.WriteLine("\nÇıkmak için bir tuşa basın...");
             Console.ReadKey();
         }
     }

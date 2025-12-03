@@ -78,3 +78,8 @@ target/
 # Temporary files
 *.tmp
 *.temp
+
+# Exclude Word documents and Mac-specific guide
+*.docx
+~$*.docx
+RUN_GUIDE_MAC.md

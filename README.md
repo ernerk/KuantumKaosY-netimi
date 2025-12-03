@@ -29,7 +29,13 @@ Projede aşağıdaki OOP prensipleri uygulanmıştır:
 
 ## 🚀 Kurulum ve Çalıştırma
 
-### C# (.NET 6.0)
+### Ön Gereksinimler (macOS)
+Gerekli araçları Homebrew ile kurabilirsiniz:
+```bash
+brew install dotnet maven node python
+```
+
+### C# (.NET 9.0)
 ```bash
 cd CSharp
 dotnet run
@@ -38,13 +44,13 @@ dotnet run
 ### Java (Maven)
 ```bash
 cd Java
-mvn compile exec:java
+mvn clean compile exec:java
 ```
 
 ### Python (3.8+)
 ```bash
 cd Python
-python kuantum_kaos_yonetimi.py
+python3 kuantum_kaos_yonetimi.py
 ```
 
 ### JavaScript (Node.js 14+)
