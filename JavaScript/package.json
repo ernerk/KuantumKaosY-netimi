@@ -1,0 +1,23 @@
+{
+  "name": "kuantum-kaos-yonetimi",
+  "version": "1.0.0",
+  "description": "Kuantum Kaos Yönetimi Sistemi - JavaScript Implementation",
+  "main": "kuantum-kaos-yonetimi.js",
+  "scripts": {
+    "start": "node kuantum-kaos-yonetimi.js",
+    "test": "echo \"Test suite not implemented yet\" && exit 0"
+  },
+  "keywords": [
+    "kuantum",
+    "kaos",
+    "yonetimi",
+    "oop",
+    "javascript",
+    "nesne-yonelimli"
+  ],
+  "author": "Öğrenci",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

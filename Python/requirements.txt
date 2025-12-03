@@ -1,0 +1,11 @@
+# Kuantum Kaos Yönetimi Sistemi - Python Dependencies
+# Python 3.8+ gereklidir
+
+# Temel bağımlılıklar (Python standart kütüphanesi kullanılmıştır)
+# typing - Type hints için (Python 3.8+ ile birlikte gelir)
+# abc - Abstract Base Classes için (Python standart kütüphanesi)
+
+# Geliştirme ve test bağımlılıkları (opsiyonel)
+# pytest>=6.0.0
+# mypy>=0.910
+# black>=21.0.0
