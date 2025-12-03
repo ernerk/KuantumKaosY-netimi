@@ -83,3 +83,4 @@ target/
 *.docx
 ~$*.docx
 RUN_GUIDE_MAC.md
+Geliştirme_Raporu.md
