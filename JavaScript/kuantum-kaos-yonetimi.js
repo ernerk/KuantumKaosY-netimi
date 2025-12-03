@@ -233,7 +233,7 @@ function main() {
     console.log("\nProgram tamamlandı. Çıkmak için Ctrl+C tuşuna basın...");
     
     // Node.js ortamında kullanıcı girişi için
-    if (typeof process !== 'undefined' && process.stdin) {
+    if (typeof process !== 'undefined' && process.stdin && process.stdin.setRawMode) {
         process.stdin.setRawMode(true);
         process.stdin.resume();
         process.stdin.on('data', () => {
